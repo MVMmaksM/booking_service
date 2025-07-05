@@ -6,7 +6,7 @@ export default async (req, res, next)=>{
         const user_id = req.headers["authorization"];
 
         if(!user_id)
-            throw new AppError(404, "Не передан user_id");
+            throw new AppError(401, "Не передан user_id");
 
         const instance = global.pg_instance;
         const user = (await instance.raw(`SELECT user_id FROM users WHERE user_id = ?`, [user_id])).rows;        

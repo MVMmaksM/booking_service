@@ -1,4 +1,5 @@
 export default async (err, req, res, next)=>{ 
+    console.log(err);
     return res.status(err.status_code || 500).json(
         {       
             status_code: err.status_code || 500,        
