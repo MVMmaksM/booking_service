@@ -5,7 +5,7 @@ import commit_transaction from "../../db/commit_transaction.js";
 //бронирование номера
 const booking_room = async(user_id, start_on_tz, finish_on_tz, room_id)=>{
     //проверить, является ли пользователь vip
-    const response = await fetch(`http://localhost:8889/api/v1/user?user_id=${user_id}`);
+    const response = await fetch(`http://remote_service:8889/api/v1/user?user_id=${user_id}`);
     if(!response.ok)
         throw new AppError(response.status, `Ошибка проверки пользователя на vip: ${response}`);
     

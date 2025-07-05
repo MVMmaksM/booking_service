@@ -2,10 +2,10 @@ const db_config = {
     client: 'pg',
     pool: {min: 0, max: 10 },
     connection: {
-        host: "localhost",
+        host: "postgres",
         port: "5432",
         user: "admin",
-        database: "articles",
+        database: "bookings",
         password: "123456"
     }
 }
