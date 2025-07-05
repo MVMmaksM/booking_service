@@ -29,7 +29,7 @@
 ]
 ```
 3. роут: get http://localhost:8888/api/v1/room?limit=200&offset=0&hotel_id=2 - возвращает список номеров отеля, **параметры limit, offset, hotel_id обязательные**; 
-<br>для получения списка свободных номеров нужно передать **is_free, start_on_tz, finish_on_tz**: http://localhost:8888/api/v1/room?limit=200&offset=0&hotel_id=2&is_free=1&start_on_tz=2026-08-05T00:00:00.000Z&finish_on_tz=2026-08-05T00:00:00.000Z
+<br>для получения списка свободных номеров нужно передать **is_free, start_date, end_date**: http://localhost:8888/api/v1/room?limit=200&offset=0&hotel_id=1&start_date=2022-10-01&end_date=2022-10-06
 ```
 //ответ
 [
@@ -56,20 +56,20 @@
 ```
 //body
 {
-    "room_id": 1,
-    "start_on_tz": "2026-08-05T00:00:00.000Z",
-    "finish_on_tz": "2026-08-10T00:00:00.000Z"
+    "room_id": 2,
+    "start_date": "2023-10-05",
+    "end_date": "2023-10-10"
 }
 ```
 
 ```
 //ответ
 {
-    "booking_id": 1,
-    "created_on_tz": "2025-07-05T15:10:46.100Z",
-    "start_on_tz": "2026-08-05T00:00:00.000Z",
-    "finish_on_tz": "2026-08-10T00:00:00.000Z",
-    "is_vip": true
+    "booking_id": 34,
+    "created_on_tz": "2025-07-05T19:24:13.504Z",
+    "start_date": "2023-10-05T00:00:00.000Z",
+    "end_date": "2023-10-10T00:00:00.000Z",
+    "is_vip": false
 }
 ```
 
@@ -78,8 +78,8 @@
 ```
 //ответ
 {
-    "booking_id": 1,
-    "cancel_on_tz": "2025-07-05T15:11:45.074Z"
+    "cancel_booking_id": 2,
+    "cancel_on_tz": "2025-07-05T19:30:13.594Z"
 }
 ```
 7. роут: get http://localhost:8888/api/v1/booking?limit=200&offset=0 - возвращает список броней юзера, **параметры limit, offset обязательные**.
@@ -89,11 +89,21 @@
 [
     {
         "booking_id": 1,
-        "created_on_tz": "2025-07-05T15:10:46.100Z",
-        "start_on_tz": "2026-08-05T00:00:00.000Z",
-        "finish_on_tz": "2026-08-10T00:00:00.000Z",
-        "cancel_on_tz": "2025-07-05T15:11:45.074Z",
-        "is_vip": true
+        "created_on_tz": "2025-07-05T19:02:47.046Z",
+        "start_date": "2022-11-05T00:00:00.000Z",
+        "end_date": "2022-11-10T00:00:00.000Z",
+        "room_id": 1,
+        "is_vip": true,
+        "cancel_on_tz": "2025-07-05T19:06:23.019Z"
+    },
+    {
+        "booking_id": 2,
+        "created_on_tz": "2025-07-05T19:03:01.440Z",
+        "start_date": "2022-10-05T00:00:00.000Z",
+        "end_date": "2022-10-10T00:00:00.000Z",
+        "room_id": 1,
+        "is_vip": true,
+        "cancel_on_tz": null
     }
 ]
 ```

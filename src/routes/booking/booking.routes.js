@@ -7,12 +7,12 @@ router.post("/", async(req, res, next)=>{
         //кто бронирует
         const user_id = req.headers["authorization"];
         //даты бронирования
-        const start_on_tz = req.body.start_on_tz;
-        const finish_on_tz = req.body.finish_on_tz;
+        const start_date = req.body.start_date;
+        const end_date = req.body.end_date;
         //номер
         const room_id = req.body.room_id;
 
-        const result = await booking_room(user_id, start_on_tz, finish_on_tz, room_id);
+        const result = await booking_room(user_id, start_date, end_date, room_id);
         res.json(result);
     }
     catch(err){

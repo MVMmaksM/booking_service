@@ -1,7 +1,6 @@
 import express from "express";
 import app_config from "./config/app.dev.js";
 import create_instance from "./db/create_instance.js";
-import db_init from "./db/db_init.js";
 import errors_handler from "./middlewares/errors_handler.js";
 import authorization from "./middlewares/authorization.js"; 
 import hotel_router from "./routes/hotel/hotel.routes.js";
@@ -24,6 +23,5 @@ app.use("/", errors_handler)
 
 app.listen(http_port, async()=> {
     console.log(`server started, port: ${http_port}`);
-    global.pg_instance = create_instance();  
-    //await db_init(global.pg_instance);  
+    global.pg_instance = create_instance();
 });

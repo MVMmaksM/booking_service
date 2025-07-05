@@ -11,10 +11,10 @@ router.get("/", async(req, res, next)=>{
         //если нужны свободные номера
         const is_free = req.query.is_free;    
         //даты 
-        const start_on_tz = req.query.start_on_tz;
-        const finish_on_tz = req.query.finish_on_tz;
+        const start_date = req.query.start_date;
+        const end_date = req.query.end_date;
 
-        const result = await get_rooms(limit, offset, hotel_id, start_on_tz, finish_on_tz, is_free);
+        const result = await get_rooms(limit, offset, hotel_id, start_date, end_date, is_free);
         res.json(result);
     }
     catch(err){
