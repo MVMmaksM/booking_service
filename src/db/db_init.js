@@ -59,6 +59,7 @@ export default async (instance)=>{
                     finish_on_tz timestamp NOT NULL,
                     cancel_on_tz timestamp NULL,
                     room_id int4 NOT NULL,
+                    is_vip bool DEFAULT false NULL,
                     CONSTRAINT pk_bookings PRIMARY KEY (booking_id)
                 );
 
@@ -93,7 +94,7 @@ export default async (instance)=>{
                         VALUES (1, 'test', 'md5hashpassword', '9004561212', 'testoviy user'),
                         (2, 'test_1', 'md5hashpassword', '9004561213', 'testoviy user_1');
 
-                        -- добавляем одну бронь на 1 номер 1 юзера
+                        -- добавляем одну бронь на 1 номер для юзера с ид 1
                         INSERT INTO bookings (booking_id, created_by, start_on_tz, finish_on_tz, room_id)
                         VALUES (1, 1, '2025-07-04 10:14:40.600', '2025-07-10 10:14:40.600', 1);`);
 
