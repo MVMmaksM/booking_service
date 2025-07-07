@@ -7,8 +7,9 @@ export default async (limit, offset, hotel_id, start_date, end_date, is_free)=>{
     //свободные номера на дату
     if(is_free){        
         where += `AND r.room_id NOT IN (SELECT room_id
-										FROM public.active_bookings 
-										WHERE date_range && daterange(?,?))`;
+										FROM public.bookings 
+										WHERE date_range && daterange(?,?)
+                                        AND cancel_on_tz IS NULL)`;
         parameters.push(start_date, end_date);
     }    
 

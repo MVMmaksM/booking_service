@@ -40,7 +40,7 @@ DO $$
                     CONSTRAINT uq_phone UNIQUE (phone)
                 );
 
-            create table active_bookings
+            create table public.bookings
                 (
                     booking_id serial4 not null,
                     created_on_tz timestamp DEFAULT (now() AT TIME ZONE 'utc'::text) NOT NULL,
@@ -48,28 +48,12 @@ DO $$
                     room_id int not null,
                     date_range daterange not null,
                     is_vip bool default false,
-                    CONSTRAINT pk_bookings_booking_id primary key (booking_id),
-                    CONSTRAINT uq_active_bookings_room_id_date_range UNIQUE(room_id, date_range)
+                    cancel_on_tz timestamp NULL,
+                    CONSTRAINT pk_bookings_booking_id primary key (booking_id)                   
                 );
 
-                ALTER TABLE public.active_bookings ADD CONSTRAINT active_bookings_room_id_fkey FOREIGN KEY (room_id) REFERENCES public.rooms(room_id);
-                ALTER TABLE public.active_bookings ADD CONSTRAINT active_bookings_created_by_fkey FOREIGN KEY (created_by) REFERENCES public.users(user_id);
-                --create index idx_active_bookings on active_bookings using gist (date_range_booking)
-
-                create table cancel_bookings
-                (                   
-                    cancel_booking_id int not null,
-                    created_on_tz timestamp NOT NULL,
-                    created_by int not null,	
-                    room_id int not null,
-                    date_range daterange not null,
-                    cancel_on_tz timestamp DEFAULT (now() AT TIME ZONE 'utc'::text) NOT NULL,
-                    is_vip bool default false,
-                    CONSTRAINT pk_cancel_bookings primary key (cancel_booking_id)                    
-                );
-
-            ALTER TABLE public.cancel_bookings ADD CONSTRAINT cancel_bookings_room_id_fkey FOREIGN KEY (room_id) REFERENCES public.rooms(room_id);
-            ALTER TABLE public.cancel_bookings ADD CONSTRAINT cancel_bookings_created_by_fkey FOREIGN KEY (created_by) REFERENCES public.users(user_id);
+                ALTER TABLE public.bookings ADD CONSTRAINT bookings_room_id_fkey FOREIGN KEY (room_id) REFERENCES public.rooms(room_id);
+                ALTER TABLE public.bookings ADD CONSTRAINT bookings_created_by_fkey FOREIGN KEY (created_by) REFERENCES public.users(user_id);           
 
             INSERT INTO hotels (hotel_id, name, description, address) 
                         VALUES(1, 'Тестовый отель 5 звезд', 'Супер отель', 'г. Курган, ул. Тестовая, д.33'),
@@ -100,3 +84,25 @@ DO $$
 
 END
 $$;
+
+
+                CREATE OR REPLACE FUNCTION check_overlapping_date_range()
+                    RETURNS TRIGGER AS $$
+                    BEGIN
+                        IF EXISTS (
+                            SELECT 1
+                            FROM public.bookings b
+                            WHERE b.room_id = NEW.room_id
+                            AND b.date_range && NEW.date_range 
+                            AND b.cancel_on_tz IS NULL
+                        ) THEN
+                            RAISE EXCEPTION 'Выбранный номер уже забронирован на указанные даты';
+                        END IF;
+                        RETURN NEW;
+                    END; 
+                    $$ LANGUAGE plpgsql;            
+
+                CREATE TRIGGER t_insert_bookings
+                BEFORE INSERT ON public.bookings
+                FOR EACH ROW
+                EXECUTE FUNCTION check_overlapping_date_range();

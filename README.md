@@ -78,8 +78,8 @@
 ```
 //ответ
 {
-    "cancel_booking_id": 2,
-    "cancel_on_tz": "2025-07-05T19:30:13.594Z"
+    "booking_id": 34,
+    "cancel_on_tz": "2025-07-07T06:33:01.981Z"
 }
 ```
 7. роут: get http://localhost:8888/api/v1/booking?limit=200&offset=0 - возвращает список броней юзера, **параметры limit, offset обязательные**.
