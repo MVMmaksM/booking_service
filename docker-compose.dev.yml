@@ -1,0 +1,37 @@
+version: "3"
+services:
+  bookings_service_api:
+    container_name: "bookings_service_api"
+    image: "bookings_service_api_image"
+    build: 
+      context: ./
+      dockerfile: Dockerfile.dev
+    ports: 
+      - "8888:8888"
+    depends_on:
+      - postgres   
+    restart: on-failure
+  postgres:
+    image: postgres:17.0
+    environment:
+      POSTGRES_DB: "bookings"
+      POSTGRES_USER: "admin"
+      POSTGRES_PASSWORD: "123456"    
+    ports:
+      - "5432:5432"
+    volumes:      
+      - ./src/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+  remote_service:
+    container_name: "remote_service"
+    image: "bookings_service_api_image"  
+    command: sh -c "node ./src/remote_service/remote_service.js" 
+    depends_on:
+      - bookings_service_api 
+    ports:
+      - "8889:8889"    
+    restart: always
+
+volumes:
+  postgres_data:
